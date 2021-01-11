@@ -8,6 +8,7 @@ public class Cell : MonoBehaviour
     public int xCoord, yCoord;
     public GameObject possibleAnswersHolder;
 
+    [SerializeField]
     private int storedValue;
     public int StoredValue { get { return storedValue; } 
         set
