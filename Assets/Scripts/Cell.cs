@@ -6,6 +6,7 @@ using TMPro;
 public class Cell : MonoBehaviour
 {
     public int xCoord, yCoord;
+    public GameObject possibleAnswersHolder;
 
     private int storedValue;
     public int StoredValue { get { return storedValue; } 
@@ -23,6 +24,11 @@ public class Cell : MonoBehaviour
 
     public TMP_Text number;
 
+    private void Start()
+    {
+        possibleAnswersHolder.SetActive(grid.inputAllowed);
+    }
+
     public void SetCoordinates(int x, int y)
     {
         xCoord = x+1;
@@ -32,10 +38,15 @@ public class Cell : MonoBehaviour
     public void HandleDisplay()
     {
         if (storedValue > 0 && storedValue < 10)
+        {
             number.text = $"{storedValue}";
+            possibleAnswersHolder.SetActive(false);
+        }
         else
         {
             number.text = "";
+            if(grid.inputAllowed)
+                possibleAnswersHolder.SetActive(true);
         }
     }
 
