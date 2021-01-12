@@ -1,6 +1,6 @@
 ﻿namespace Pseudoku.Solver
 {
-    public interface IValidator
+    public interface IConstraintValidator
     {
         public int ValidatorDifficulty { get; set; }
         public bool ValidatePotentialCellValues(PseudoCell cell, PseudoBoard board);

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Pseudoku.Solver.Validators
 {
-    public class KnightUnique : IValidator
+    public class KnightUnique : IConstraintValidator
     {
         public int ValidatorDifficulty { get; set; } = 1;
         public static readonly List<(int,int)> KnightMoves = new List<(int, int)>{(1 , 2), (1 , -2), (-1, 2), (-1, -2), (2 , 1), (2 , -1), (-2, 1), (-2, -1)};

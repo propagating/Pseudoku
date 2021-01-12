@@ -1,6 +1,7 @@
 ﻿using System.Linq;
+using Solver.Interfaces;
 
-namespace Pseudoku.Solver.Methods
+namespace Solver.SolveMethods
 {
     public class IntersectionRemoval : ISolveMethod
     {

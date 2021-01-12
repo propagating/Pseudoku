@@ -21,7 +21,16 @@ public class Grid : MonoBehaviour
     {
         this.transform.position = inputAllowed ? new Vector2(width * 0.75f, -height/2) : new Vector2(-width * 0.75f, -height /2);
         Grid[] allGrids = FindObjectsOfType<Grid>();
-        Vector3 cam = allGrids[0].transform.position + allGrids[1].transform.position;
+        Vector3 cam;
+        if (allGrids.Length > 1)
+        {
+            cam = allGrids[0].transform.position + allGrids[1].transform.position;
+        }
+        else
+        {
+            cam = allGrids[0].transform.position;
+        }
+
         cam.z = -10f;
         cam.y = 0f;
         cam.x += Mathf.Abs(allGrids[0].transform.position.y);

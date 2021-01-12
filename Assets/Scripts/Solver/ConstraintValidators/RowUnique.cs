@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Solver.Interfaces;
 
-namespace Pseudoku.Solver.Validators
+namespace Solver.ConstraintValidators
 {
-    public class BoxUnique : IConstraintValidator
+    public class RowUnique : IConstraintValidator
     {
         public int ValidatorDifficulty { get; set; } = 1;
-
         public bool ValidatePotentialCellValues(PseudoCell cell, PseudoBoard board)
         {
-            var existingValues = board.BoardCells.Where(x => x.CellBox == cell.CellBox
+            var existingValues = board.BoardCells.Where(x => x.CellRow == cell.CellRow
                                                              && x.SolvedCell
                                                              && cell.PossibleValues.Contains(x.CurrentValue)).Select(x=> x.CurrentValue).ToList();
             var startCount = cell.PossibleValues.Count;

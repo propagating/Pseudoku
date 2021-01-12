@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Pseudoku.Solver.Validators
 {
-    public class ColumnUnique : IValidator
+    public class ColumnUnique : IConstraintValidator
     {
         public int ValidatorDifficulty { get; set; } = 1;
         public bool ValidatePotentialCellValues(PseudoCell cell, PseudoBoard board)

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Solver.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Pseudoku.Solver.Methods
+namespace Solver.SolveMethods
 {
     public class HiddenSingle : ISolveMethod
     {

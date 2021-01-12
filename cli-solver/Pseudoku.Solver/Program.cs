@@ -212,8 +212,8 @@ namespace Pseudoku.Solver
 
     public class Solver
     {
-        public List<IValidator> BoardValidators { get; set; } = new List<IValidator>();
-        public List<IMethod> SolverMethods { get; set; } = new List<IMethod>();
+        public List<IConstraintValidator> BoardValidators { get; set; } = new List<IConstraintValidator>();
+        public List<ISolveMethod> SolverMethods { get; set; } = new List<ISolveMethod>();
 
         public Solver(List<PuzzleConstraint> constraints)
         {
@@ -386,6 +386,8 @@ namespace Pseudoku.Solver
                 currentColumn = 1;
                 currentRow++;
             }
+
+            Console.ReadLine();
         }
 
         public void PrintBoard()
@@ -421,7 +423,18 @@ namespace Pseudoku.Solver
         }
     }
 
+    public class SolverStep
+    {
+        public uint SolverStepId { get; set; }
+        public string StepComment { get; set; }
+        public SolverState BoardState { get; set; }
+    }
 
+    public class SolverState
+    {
+        public List<PseudoCell> BoardCells { get; set; }
+        public bool SolvedState { get; set; }
+    }
 
     public enum PuzzleConstraint
     {
@@ -432,20 +445,12 @@ namespace Pseudoku.Solver
 
     enum ActionType
     {
-        UpdatePossibleValues,
+        UpdatePossibleValue,
+        TryPossibleValue,
         SetCurrentValue,
         SolveCell,
         SolveBoard
     }
 
-    enum ActionComplement
-    {
-        RemovePossible,
-        RemoveCurrentValue,
-        ResetCellSolved,
-        ResetBoardSolved
-
-
-    }
 
 }
