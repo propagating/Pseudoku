@@ -19,6 +19,8 @@ public class Cell : MonoBehaviour
         } 
     }
 
+    public int correctValue = 0;
+
     public Grid grid;
 
     public SpriteRenderer sr;
@@ -68,5 +70,11 @@ public class Cell : MonoBehaviour
             grids[i].GetCell(xCoord, yCoord).storedValue = num;
             grids[i].GetCell(xCoord, yCoord).HandleDisplay();
         }
+    }
+
+    public void ClearCell()
+    {
+        correctValue = 0;
+        StoredValue = 0;
     }
 }
