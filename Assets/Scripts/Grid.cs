@@ -51,46 +51,60 @@ public class Grid : MonoBehaviour
         if (!selectedCell)
             return;
 
+        bool cellValueChanged = false;
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 1 ? 0 : 1;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 2 ? 0 : 2;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 3 ? 0 : 3;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 4 ? 0 : 4;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 5 ? 0 : 5;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 6 ? 0 : 6;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 7 ? 0 : 7;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 8 ? 0 : 8;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
         {
             selectedCell.StoredValue = selectedCell.StoredValue == 9 ? 0 : 9;
+            cellValueChanged = true;
         }
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Delete))
         {
             selectedCell.StoredValue = 0;
+            cellValueChanged = true;
         }
+
+        if (cellValueChanged)
+            PuzzleManager.instance.SetBoardState(PuzzleManager.instance.GetCurrentBoardState(this), true);
     }
 
     public Cell GetCell(int x, int y)
