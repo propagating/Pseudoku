@@ -1,0 +1,3 @@
+[submodule "pseudoku-cli"]
+	path = pseudoku-cli
+	url = https://github.com/propagating/pseudoku-cli.git
