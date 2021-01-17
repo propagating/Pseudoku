@@ -3,6 +3,6 @@
     public interface IConstraintValidator
     {
         int ValidatorDifficulty { get; set; }
-        bool ValidatePotentialCellValues(PseudoCell cell, PseudoBoard board);
+        bool ValidatePotentialCellValues(PseudoCell cell, PseudoBoard board, out string solveMessage);
     }
 }

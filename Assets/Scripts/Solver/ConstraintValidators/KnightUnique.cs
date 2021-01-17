@@ -9,8 +9,9 @@ namespace Solver.ConstraintValidators
         public int ValidatorDifficulty { get; set; } = 1;
         public static readonly List<(int,int)> KnightMoves = new List<(int, int)>{(1 , 2), (1 , -2), (-1, 2), (-1, -2), (2 , 1), (2 , -1), (-2, 1), (-2, -1)};
 
-        public bool ValidatePotentialCellValues(PseudoCell cell, PseudoBoard board)
+        public bool ValidatePotentialCellValues(PseudoCell cell, PseudoBoard board, out string solveMessage)
         {
+            solveMessage = "";
             var startCount = cell.PossibleValues.Count; //can be used in case we need to implement guessing as a way to rollback changes
             foreach (var move in KnightMoves.ToList())
             {
@@ -21,14 +22,17 @@ namespace Solver.ConstraintValidators
                                                                  && x.CellColumn == moveHorizontal
                                                                  && x.CellBox != cell.CellBox
                                                                  && x.SolvedCell
-                                                                 && cell.PossibleValues.Contains(x.CurrentValue)).Select(x=> x.CurrentValue).ToList();
-                foreach (var value in existingValues)
+                                                                 && cell.PossibleValues.Contains(x.CurrentValue)).ToList();
+                foreach (var eCell in existingValues)
                 {
-                    cell.PossibleValues.Remove(value);
+                    solveMessage = $"{solveMessage}\nRemoved {eCell.CurrentValue} from R{cell.CellRow} C{cell.CellColumn} for conflict with R{eCell.CellRow} C{eCell.CellColumn} : Knight's Move Constraint";
+                    cell.PossibleValues.Remove(eCell.CurrentValue);
                 }
+
                 if (cell.PossibleValues.Count == 1)
                 {
                     cell.CurrentValue   = cell.PossibleValues.First(); //only 1 value remains.
+                    solveMessage = $"{solveMessage}\nSolved for {cell.CurrentValue} in R{cell.CellRow} C{cell.CellColumn} : Naked Single Knight's Move";
                     cell.PossibleValues = new List<int>();
                     cell.SolvedCell     = true;
                     return true;
@@ -38,5 +42,6 @@ namespace Solver.ConstraintValidators
 
             return cell.PossibleValues.Count != startCount;
         }
+
     }
 }

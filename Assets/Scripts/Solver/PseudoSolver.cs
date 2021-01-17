@@ -8,13 +8,29 @@ using Solver.SolveMethods;
 
 namespace Solver
 {
-    public class PseudoSolver
+      public class PseudoSolver
     {
         public List<IConstraintValidator> BoardValidators { get; set; } = new List<IConstraintValidator>();
         public List<ISolveMethod> SolverMethods { get; set; } = new List<ISolveMethod>();
+        public List<SolverStep> SolverSteps { get; set; } = new List<SolverStep>();
+        public SolverStep CurrentStep { get; set; }
+        public PseudoBoard CurrentBoard { get; set; }
 
-        public PseudoSolver(List<PuzzleConstraint> constraints)
+        public PseudoSolver(List<PuzzleConstraint> constraints, PseudoBoard board)
         {
+
+            CurrentStep = new SolverStep
+            {
+                SolverStepId = 1,
+                StepComment = "Starting Board State",
+                State = new SolverState
+                {
+                    BoardCells = board.BoardCells,
+                    SolvedState = false
+                }
+            };
+            CurrentBoard = board;
+
             SolverMethods.Add(new HiddenSingle());
             SolverMethods.Add(new IntersectionRemoval());
 
@@ -44,16 +60,90 @@ namespace Solver
                 }
             }
         }
-        public void Solve(PseudoBoard board)
+
+        public void StepSolve()
         {
-            var currentFailures = 0;
+            var boardStateChanged = false;
+            var solvableCells = CurrentBoard.BoardCells.Where(x => !x.SolvedCell).ToList();
+            var noChangeMade = 0;
+            var solveMessage = "";
+            while (!boardStateChanged && noChangeMade <= 100)
+            {
+                var baseDifficulty = 1;
+                var validatorSuccess = false;
+
+                foreach (var validator in BoardValidators.Where(x => x.ValidatorDifficulty <= baseDifficulty).ToList())
+                {
+                    if (validatorSuccess) break;
+                    foreach (var cell in solvableCells)
+                    {
+                        if (validator.ValidatePotentialCellValues(cell, CurrentBoard, out solveMessage))
+                        {
+                            validatorSuccess = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (validatorSuccess)
+                {
+                    boardStateChanged = true;
+                    noChangeMade = 0;
+                    continue;
+                }
+
+                var methodSuccess = false;
+                foreach (var method in SolverMethods.Where(x => x.MethodDifficulty <= baseDifficulty).ToList())
+                {
+                    if (methodSuccess) break;
+                    foreach (var cell in solvableCells)
+                    {
+                        if (method.ApplyMethod(cell, CurrentBoard, out solveMessage))
+                        {
+                            methodSuccess = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (methodSuccess)
+                {
+                    boardStateChanged = true;
+                    noChangeMade = 0;
+                    continue;
+                }
+
+                baseDifficulty++;
+                noChangeMade++;
+            }
+
+            if (boardStateChanged)
+            {
+                SolverSteps.Add(CurrentStep);
+                var nextStep = new SolverStep
+                {
+                    SolverStepId = CurrentStep.SolverStepId+1,
+                    StepComment  = solveMessage,
+                    State   = new SolverState
+                    {
+                        BoardCells  = CurrentBoard.BoardCells.ToList(),
+                        SolvedState = false
+                    }
+                };
+                CurrentStep  = nextStep;
+                CurrentBoard = new PseudoBoard(CurrentBoard.BoardCells.ToList());
+            }
+        }
+        public void SolveComplete()
+        {
             var totalFailures   = 0;
             var totalSteps      = 0;
             var methodSteps     = 0;
             var validatorSteps  = 0;
-            while (!board.PuzzleSolved)
+            while (!CurrentBoard.PuzzleSolved)
             {
-                var solvableCells = board.BoardCells.Where(x => !x.SolvedCell).ToList();
+                var solveMethod = "";
+                var solvableCells = CurrentBoard.BoardCells.Where(x => !x.SolvedCell).ToList();
                 foreach (var cell in solvableCells)
                 {
 
@@ -61,15 +151,13 @@ namespace Solver
                     var methodSuccess    = false;
                     foreach (var validator in BoardValidators.OrderBy(x=> x.ValidatorDifficulty))
                     {
-                        validatorSuccess = validator.ValidatePotentialCellValues(cell, board);
+                        validatorSuccess = validator.ValidatePotentialCellValues(cell, CurrentBoard, out solveMethod);
                         if (!validatorSuccess)
                         {
-                            currentFailures++;
                             totalFailures++;
                         }
                         else
                         {
-                            currentFailures = 0;
                         }
 
                         validatorSteps++;
@@ -80,15 +168,13 @@ namespace Solver
                     {
                         foreach (var method in SolverMethods.OrderBy(x=> x.MethodDifficulty))
                         {
-                            methodSuccess = method.ApplyMethod(cell, board);
+                            methodSuccess = method.ApplyMethod(cell, CurrentBoard, out solveMethod);
                             if (!methodSuccess)
                             {
-                                currentFailures++;
                                 totalFailures++;
                             }
                             else
                             {
-                                currentFailures = 0;
                             }
                             methodSteps++;
                             totalSteps++;
@@ -96,10 +182,7 @@ namespace Solver
                     }
                 }
 
-                board.PuzzleSolved = solvableCells.All(x => x.SolvedCell);
-
-                //TODO: Store state if update occurs
-                //TODO: Add some sort of pause to check for next step
+                CurrentBoard.PuzzleSolved = !solvableCells.Any(x => !x.SolvedCell);
             }
         }
     }

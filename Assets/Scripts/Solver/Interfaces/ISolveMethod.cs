@@ -3,6 +3,6 @@
     public interface ISolveMethod
     {
         int MethodDifficulty { get; set; }
-        bool ApplyMethod(PseudoCell cell, PseudoBoard board);
+        bool ApplyMethod(PseudoCell cell, PseudoBoard board, out string solveMessage);
     }
 }
