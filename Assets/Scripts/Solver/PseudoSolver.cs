@@ -80,6 +80,12 @@ namespace Solver
                         if (validator.ValidatePotentialCellValues(cell, CurrentBoard, out solveMessage))
                         {
                             validatorSuccess = true;
+
+                            for (int i = 0; i < PuzzleManager.instance.allGrids.Length; i++)
+                            {
+                                if (PuzzleManager.instance.allGrids[i].inputAllowed)
+                                    PuzzleManager.instance.allGrids[i].GetCell(cell.CellRow, cell.CellColumn).StoredValue = cell.CurrentValue;
+                            }
                             break;
                         }
                     }

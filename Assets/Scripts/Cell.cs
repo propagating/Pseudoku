@@ -77,4 +77,12 @@ public class Cell : MonoBehaviour
         correctValue = 0;
         StoredValue = 0;
     }
+
+    public void ParsePossibleAnswers(List<int> answers)
+    {
+        for (int i = 0; i < possibleAnswersHolder.transform.childCount; i++)
+        {
+            possibleAnswersHolder.transform.GetChild(i).gameObject.SetActive(answers.Contains(i + 1));
+        }
+    }
 }

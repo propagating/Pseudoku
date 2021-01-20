@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Solver;
+using Solver.Enums;
 
 public class PuzzleManager : MonoBehaviour
 {
@@ -21,7 +23,7 @@ public class PuzzleManager : MonoBehaviour
 
     public Button previousState, nextState;
 
-    private Grid[] allGrids;
+    public Grid[] allGrids;
 
     private void Awake()
     {
@@ -54,6 +56,18 @@ public class PuzzleManager : MonoBehaviour
         storedSequence = sequenceInput.text;
 
         SetBoardState(storedSequence, true);
+
+        var puzzleConstraints = new List<PuzzleConstraint>();
+        puzzleConstraints.Add(PuzzleConstraint.RowUnique);
+        puzzleConstraints.Add(PuzzleConstraint.ColumnUnique);
+        puzzleConstraints.Add(PuzzleConstraint.BoxUnique);
+        var pseudoBoard = new PseudoBoard(allGrids[0].width, allGrids[0].height, storedSequence);
+        PseudoSolver solver = new PseudoSolver(puzzleConstraints, pseudoBoard);
+    }
+
+    public void OnSolveSequence()
+    {
+
     }
 
     public void OnClearSequence()
@@ -117,11 +131,6 @@ public class PuzzleManager : MonoBehaviour
         states.Add(state);
         CurrentState = maxStates-1;
         UpdateStateArrowInteracts();
-    }
-
-    public void OnSolveSequence()
-    {
-
     }
 
     public void OnCycleState(bool forward)
