@@ -25,6 +25,12 @@ public class PuzzleManager : MonoBehaviour
 
     public Grid[] allGrids;
 
+    [Header("Configs")]
+    public TMP_InputField numBoxesInput;
+    public TMP_InputField boxesPerRowInput;
+    public int advConRows, advConColumns, advConBoxes;
+    public bool knights, queens, kings, killer;
+
     private void Awake()
     {
         if(instance != null && instance != this)
@@ -176,5 +182,48 @@ public class PuzzleManager : MonoBehaviour
             if (allGrids[i].inputAllowed)
                 allGrids[i].DeSelectCell();
         }
+    }
+
+    public void OnCustomBoxesToggle(bool toggle)
+    {
+        boxesPerRowInput.interactable = !toggle;
+        numBoxesInput.interactable = !toggle;
+        boxesPerRowInput.placeholder.GetComponent<TMP_Text>().text = !toggle ? "Enter text..." : "";
+        numBoxesInput.placeholder.GetComponent<TMP_Text>().text = !toggle ? "Enter text..." : "";
+    }
+
+    public void OnInputRows(string num)
+    {
+        advConRows = int.Parse(num);
+    }
+
+    public void OnInputColumns(string num)
+    {
+        advConColumns = int.Parse(num);
+    }
+
+    public void OnInputBoxes(string num)
+    {
+        advConBoxes = int.Parse(num);
+    }
+
+    public void OnToggleKnights(bool toggle)
+    {
+        knights = toggle;
+    }
+
+    public void OnToggleKings(bool toggle)
+    { 
+        kings = toggle;
+    }
+
+    public void OnToggleQueens(bool toggle)
+    {
+        queens = toggle;
+    }
+
+    public void OnToggleKiller(bool toggle)
+    {
+        killer = toggle;
     }
 }
